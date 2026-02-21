@@ -1,4 +1,7 @@
 
+using API.DTOs;
+using Microsoft.AspNetCore.Mvc;
+
 namespace API.Entities;
 
 public class AppUser
@@ -6,8 +9,12 @@ public class AppUser
 
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    public required string Displayname { get; set; }
+    public required string DisplayName { get; set; }
 
     public required string Email { get; set; }
+
+    public required Byte[] PasswordHash {get; set;}
+
+    public required Byte[] PasswordSalt {get; set;}
 
 }
