@@ -47,7 +47,7 @@ public class Seed
                     Gender = member.Gender,
                     City = member.City,
                     Country = member.Country,
-                    lastActive = member.lastActive,
+                    LastActive = member.LastActive,
                     Created = member.Created
                 }
             };
