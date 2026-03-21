@@ -19,6 +19,7 @@
     <Folder Include="Helpers\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Middleware\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
