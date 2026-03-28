@@ -15,7 +15,6 @@ public interface IMessageRepository
     Task<IReadOnlyList<MessageDto>> GetMessagesThread(string currentMemberId, 
     string recipientId);
 
-    Task<bool> SaveAllAsync();
 
     void AddGroup(Group group);
     
