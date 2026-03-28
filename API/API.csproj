@@ -21,6 +21,7 @@
     <Folder Include="Middleware\" />
     <Folder Include="Migrations\" />
     <Folder Include="Services\" />
+    <Folder Include="SignalR\" />
   </ItemGroup>
 
   <ItemGroup>
