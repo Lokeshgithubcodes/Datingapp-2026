@@ -9,8 +9,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -19,15 +17,15 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
       - name: Set up node.jobs
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '21'
 
       - name: Install Angular cli
-        run: npm install -g @angular/cli@latest
+        run: npm install -g @angular/cli@20
 
       - name: Install deps and build angular app
         run: |
