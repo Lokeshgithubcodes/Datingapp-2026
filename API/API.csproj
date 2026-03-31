@@ -19,7 +19,6 @@
     <Folder Include="Helpers\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Middleware\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Services\" />
     <Folder Include="SignalR\" />
   </ItemGroup>
@@ -29,7 +28,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.11.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
   </ItemGroup>
