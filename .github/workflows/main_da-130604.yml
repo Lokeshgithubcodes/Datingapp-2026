@@ -14,51 +14,51 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      # Checkout source code
+      # Checkout source
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node.js for Angular
+      # Setup Node (Angular)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: client/package-lock.json
 
-      # Install Angular dependencies
+      # Install dependencies
       - name: Install Angular dependencies
         working-directory: client
         run: npm ci
 
-      # Build Angular application
+      # Build Angular
       - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
 
-      # Setup .NET SDK
-      - name: Setup .NET
+      # Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
-      # Restore .NET dependencies
+      # Restore
       - name: Restore .NET dependencies
         run: dotnet restore
 
-      # Build .NET project
+      # Build
       - name: Build .NET project
         run: dotnet build --configuration Release --no-restore
 
-      # Publish .NET project
+      # Publish
       - name: Publish .NET project
         run: dotnet publish --configuration Release --output ./publish
 
-      # Upload build artifact
-      - name: Upload artifact
+      # Upload artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-build
+          name: app
           path: ./publish
 
   deploy:
@@ -70,25 +70,25 @@ jobs:
       contents: read
 
     steps:
-      # Download build artifact
+      # Download artifact
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-build
+          name: app
           path: .
 
-      # Login to Azure
-      - name: Azure Login
+      # Azure login
+      - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C040F7B6C6164D8BBAAE97AAF7166CB3 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_773F6DBF295945719406630DBDAF6229 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D8774A25B2A3491084C0FFFEBF58C8FE }}
 
-      # Deploy to Azure Web App
+      # Deploy
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'da-130604'
-          slot-name: 'Production'
+          app-name: da-130604
+          slot-name: Production
           package: .
