@@ -43,7 +43,7 @@ jobs:
           }
           New-Item -ItemType Directory -Path "API/wwwroot"
 
-          Copy-Item -Recurse -Force "client/dist/dating-app/*" "API/wwwroot/"
+          Copy-Item -Recurse -Force "client/dist/*" "API/wwwroot/"
 
       # ✅ Setup .NET
       - name: Setup .NET SDK
