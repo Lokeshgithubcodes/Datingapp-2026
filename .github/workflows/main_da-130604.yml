@@ -36,6 +36,7 @@ jobs:
 
       # ✅ Copy Angular build to .NET wwwroot
       - name: Copy Angular to wwwroot
+        shell: cmd
         run: |
           rmdir /s /q API\wwwroot
           mkdir API\wwwroot
