@@ -9,16 +9,18 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: read
 
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       # ✅ Checkout
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Setup Node
+      # ✅ Setup Node (match your local)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -29,20 +31,20 @@ jobs:
         working-directory: client
         run: npm install
 
-      # ✅ Build Angular
+      # ✅ Build Angular (project CLI)
       - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
 
-      # ✅ Copy Angular build to .NET wwwroot
+      # ✅ Copy Angular to .NET wwwroot
       - name: Copy Angular to wwwroot
         run: |
-          rmdir /s /q YourDotnetProject\wwwroot
-          mkdir YourDotnetProject\wwwroot
-          xcopy /E /I /Y client\dist\* YourDotnetProject\wwwroot\
+          rmdir /s /q DatingApp.API\wwwroot
+          mkdir DatingApp.API\wwwroot
+          xcopy /E /I /Y client\dist\* DatingApp.API\wwwroot\
 
       # ✅ Setup .NET
-      - name: Setup .NET SDK
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
@@ -69,7 +71,6 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
-
     permissions:
       id-token: write
       contents: read
