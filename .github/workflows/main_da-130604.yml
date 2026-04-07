@@ -14,25 +14,32 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      # ✅ Checkout code
+      # ✅ Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ✅ Setup Node.js (Angular)
+      # ✅ Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # ✅ Install Angular dependencies (safe version)
+      # ✅ Install Angular deps
       - name: Install Angular dependencies
         working-directory: client
         run: npm install
 
-      # ✅ Build Angular app
+      # ✅ Build Angular
       - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
+
+      # ✅ Copy Angular build to .NET wwwroot
+      - name: Copy Angular to wwwroot
+        run: |
+          rmdir /s /q YourDotnetProject\wwwroot
+          mkdir YourDotnetProject\wwwroot
+          xcopy /E /I /Y client\dist\* YourDotnetProject\wwwroot\
 
       # ✅ Setup .NET
       - name: Setup .NET SDK
@@ -40,16 +47,16 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      # ✅ Restore .NET packages
-      - name: Restore .NET dependencies
+      # ✅ Restore
+      - name: Restore .NET
         run: dotnet restore
 
-      # ✅ Build .NET project
-      - name: Build .NET project
+      # ✅ Build
+      - name: Build .NET
         run: dotnet build --configuration Release --no-restore
 
-      # ✅ Publish .NET app
-      - name: Publish .NET project
+      # ✅ Publish
+      - name: Publish .NET
         run: dotnet publish --configuration Release --output ./publish
 
       # ✅ Upload artifact
@@ -75,7 +82,7 @@ jobs:
           name: app
           path: .
 
-      # ✅ Azure login
+      # ✅ Azure Login
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -83,7 +90,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_773F6DBF295945719406630DBDAF6229 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D8774A25B2A3491084C0FFFEBF58C8FE }}
 
-      # ✅ Deploy to Azure Web App
+      # ✅ Deploy
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
