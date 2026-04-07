@@ -9,57 +9,55 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read
 
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       # ✅ Checkout
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ✅ Setup Node (match your local)
+      # ✅ Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # ✅ Install Angular deps
+      # ✅ Install Angular dependencies
       - name: Install Angular dependencies
         working-directory: client
         run: npm install
 
-      # ✅ Build Angular (project CLI)
+      # ✅ Build Angular
       - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
 
-      # ✅ Copy Angular to .NET wwwroot
+      # ✅ Copy Angular build to .NET wwwroot
       - name: Copy Angular to wwwroot
         run: |
-          rmdir /s /q DatingApp.API\wwwroot
-          mkdir DatingApp.API\wwwroot
-          xcopy /E /I /Y client\dist\* DatingApp.API\wwwroot\
+          rmdir /s /q API\wwwroot
+          mkdir API\wwwroot
+          xcopy /E /I /Y client\dist\* API\wwwroot\
 
       # ✅ Setup .NET
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
       # ✅ Restore
       - name: Restore .NET
-        run: dotnet restore
+        run: dotnet restore API/API.csproj
 
       # ✅ Build
       - name: Build .NET
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build API/API.csproj --configuration Release --no-restore
 
       # ✅ Publish
       - name: Publish .NET
-        run: dotnet publish --configuration Release --output ./publish
+        run: dotnet publish API/API.csproj --configuration Release --output ./publish
 
       # ✅ Upload artifact
       - name: Upload artifact
@@ -71,6 +69,7 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
+
     permissions:
       id-token: write
       contents: read
