@@ -36,11 +36,14 @@ jobs:
 
       # ✅ Copy Angular build to .NET wwwroot
       - name: Copy Angular to wwwroot
-        shell: cmd
+        shell: pwsh
         run: |
-          rmdir /s /q API\wwwroot
-          mkdir API\wwwroot
-          xcopy /E /I /Y client\dist\* API\wwwroot\
+          if (Test-Path "API/wwwroot") {
+            Remove-Item -Recurse -Force "API/wwwroot"
+          }
+          New-Item -ItemType Directory -Path "API/wwwroot"
+
+          Copy-Item -Recurse -Force "client/dist/dating-app/*" "API/wwwroot/"
 
       # ✅ Setup .NET
       - name: Setup .NET SDK
