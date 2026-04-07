@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - da-130604
+name: Build and Deploy ASP.NET Core + Angular App
 
 on:
   push:
@@ -11,65 +11,82 @@ jobs:
     runs-on: windows-latest
 
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      - name: Checkout source
+      # Checkout source code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Setup Node.js for Angular
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: client/package-lock.json
 
+      # Install Angular dependencies
       - name: Install Angular dependencies
         working-directory: client
-        run: npm install   # 👈 changed from npm ci
+        run: npm ci
 
-      - name: Build Angular
+      # Build Angular application
+      - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
 
+      # Setup .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
-      - name: Restore .NET
+      # Restore .NET dependencies
+      - name: Restore .NET dependencies
         run: dotnet restore
 
-      - name: Build .NET
+      # Build .NET project
+      - name: Build .NET project
         run: dotnet build --configuration Release --no-restore
 
-      - name: Publish .NET
-        run: dotnet publish -c Release -o ./publish
+      # Publish .NET project
+      - name: Publish .NET project
+        run: dotnet publish --configuration Release --output ./publish
 
+      # Upload build artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dotnet-app
+          name: app-build
           path: ./publish
 
   deploy:
     runs-on: windows-latest
     needs: build
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
+      # Download build artifact
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: dotnet-app
+          name: app-build
           path: .
 
-      - name: Login to Azure
+      # Login to Azure
+      - name: Azure Login
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C040F7B6C6164D8BBAAE97AAF7166CB3 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_773F6DBF295945719406630DBDAF6229 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D8774A25B2A3491084C0FFFEBF58C8FE }}
 
-      - name: Deploy to Azure
+      # Deploy to Azure Web App
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'da-130604'
