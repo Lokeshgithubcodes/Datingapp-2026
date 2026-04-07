@@ -14,51 +14,49 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      # Checkout source
+      # ✅ Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node.js for Angular
+      # ✅ Setup Node.js (Angular)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
 
-      # Install dependencies
+      # ✅ Install Angular dependencies (safe version)
       - name: Install Angular dependencies
         working-directory: client
-        run: npm ci
+        run: npm install
 
-      # Build Angular app
+      # ✅ Build Angular app
       - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
 
-      # Setup .NET
+      # ✅ Setup .NET
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
-      # Restore dependencies
+      # ✅ Restore .NET packages
       - name: Restore .NET dependencies
         run: dotnet restore
 
-      # Build project
+      # ✅ Build .NET project
       - name: Build .NET project
         run: dotnet build --configuration Release --no-restore
 
-      # Publish project
+      # ✅ Publish .NET app
       - name: Publish .NET project
         run: dotnet publish --configuration Release --output ./publish
 
-      # Upload artifact
-      - name: Upload build artifact
+      # ✅ Upload artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-build
+          name: app
           path: ./publish
 
   deploy:
@@ -70,14 +68,14 @@ jobs:
       contents: read
 
     steps:
-      # Download artifact
+      # ✅ Download artifact
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-build
+          name: app
           path: .
 
-      # Azure login
+      # ✅ Azure login
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -85,7 +83,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_773F6DBF295945719406630DBDAF6229 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D8774A25B2A3491084C0FFFEBF58C8FE }}
 
-      # Deploy
+      # ✅ Deploy to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
