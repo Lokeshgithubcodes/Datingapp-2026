@@ -18,12 +18,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node (Angular)
+      # Setup Node.js for Angular
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
+          cache: 'npm'
           cache-dependency-path: client/package-lock.json
 
       # Install dependencies
@@ -31,7 +31,7 @@ jobs:
         working-directory: client
         run: npm ci
 
-      # Build Angular
+      # Build Angular app
       - name: Build Angular app
         working-directory: client
         run: npx ng build --configuration production
@@ -42,15 +42,15 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      # Restore
+      # Restore dependencies
       - name: Restore .NET dependencies
         run: dotnet restore
 
-      # Build
+      # Build project
       - name: Build .NET project
         run: dotnet build --configuration Release --no-restore
 
-      # Publish
+      # Publish project
       - name: Publish .NET project
         run: dotnet publish --configuration Release --output ./publish
 
@@ -58,7 +58,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app
+          name: app-build
           path: ./publish
 
   deploy:
@@ -74,7 +74,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: app
+          name: app-build
           path: .
 
       # Azure login
@@ -89,6 +89,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: da-130604
-          slot-name: Production
+          app-name: 'da-130604'
+          slot-name: 'Production'
           package: .
