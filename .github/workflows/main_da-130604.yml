@@ -27,11 +27,11 @@ jobs:
     - name: Install Angular CLI
       run: npm install -g @angular/cli@21.1.4
 
-    - name: Install dependencies and build Angular app
+    - name: Install deps and build Angular app
       run: |
         cd client
         npm install
-        npx ng build --configuration production
+        ng build
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
