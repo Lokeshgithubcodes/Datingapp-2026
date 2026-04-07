@@ -20,21 +20,22 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  
 
     steps:
+      - name: checkout source
       - uses: actions/checkout@v4
 
-      - name: Set up node.jobs
+      - name: Use Node.js 22 (App Runtime)
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          Cache: 'npm'
 
-      - name: Install Angular cli
-        run: npm install -g @angular/cli@21.1.4
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
 
-      - name: Install deps and build angular app
-        run: |
-          cd client
-          npm install
-          ng build
+      - name: Build Angular App
+        working-directory: client
+        run: npx ng build --configuration production
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
