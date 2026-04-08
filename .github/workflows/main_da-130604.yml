@@ -14,33 +14,21 @@ jobs:
       - uses: actions/checkout@v4
 
       
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '22'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.0'
 
-      # # ✅ Install Angular dependencies
-      # - name: Install Angular dependencies
-      #   working-directory: client
-      #   run: npm install
+      - name: Install Angular cli
+        run: npm install -g @angular/cli@21.1.4
 
-      # # ✅ Build Angular
-      # - name: Build Angular app
-      #   working-directory: client
-      #   run: npx ng build --configuration production
+      - name: Install deps and build angular app
+        run: |
+          cd client
+          npm install
+          ng build
 
-      # # ✅ Copy Angular build to .NET wwwroot
-      # - name: Copy Angular to wwwroot
-      #   shell: pwsh
-      #   run: |
-      #     if (Test-Path "API/wwwroot") {
-      #       Remove-Item -Recurse -Force "API/wwwroot"
-      #     }
-      #     New-Item -ItemType Directory -Path "API/wwwroot"
-
-      #     Copy-Item -Recurse -Force "client/dist/*" "API/wwwroot/"
-
-      # # ✅ Setup .NET
+      
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
